@@ -20,21 +20,26 @@ try {
     		$pl = $event[1];
     		switch($event[0]) {
     			case 'message': 
-    				print "---------------------------------------------------------------------------------\n";
-    				print "Message from: {$pl['from']}\n";
-    				if($pl['subject']) print "Subject: {$pl['subject']}\n";
-    				print $pl['body'] . "\n";
-    				print "---------------------------------------------------------------------------------\n";
-    				$conn->message($pl['from'], $body="Thanks for sending me \"{$pl['body']}\".", $type=$pl['type']);
-					$cmd = explode(' ', $pl['body']);
-    				if($cmd[0] == 'quit') $conn->disconnect();
-    				if($cmd[0] == 'break') $conn->send("</end>");
-    				if($cmd[0] == 'vcard') {
-						if(!($cmd[1])) $cmd[1] = $conn->user . '@' . $conn->server;
-						// take a note which user requested which vcard
-						$vcard_request[$pl['from']] = $cmd[1];
-						// request the vcard
-						$conn->getVCard($cmd[1]);
+    				if( ! empty($pl['body'])) {
+	    				print "---------------------------------------------------------------------------------\n";
+	    				print "Message from: {$pl['from']}\n";
+	    				if( ! empty($pl['subject'])) print "Subject: {$pl['subject']}\n";
+	    				print "body: ". $pl['body'] . "\n";
+	    				print "type: ". $pl['type'] . "\n";
+	    				var_dump($pl);
+	    				print "---------------------------------------------------------------------------------\n";
+	    				$conn->message($pl['from'], $body="echo: \"{$pl['body']}\"", $type=$pl['type']);
+						$cmd = explode(' ', $pl['body']);
+						if($cmd[0] == 'cedric') $conn->message($pl['from'], $body="Mon maitre!!.", $type=$pl['type']);
+	    				if($cmd[0] == 'quit') $conn->disconnect();
+	    				if($cmd[0] == 'break') $conn->send("</end>");
+	    				if($cmd[0] == 'vcard') {
+							if(!($cmd[1])) $cmd[1] = $conn->user . '@' . $conn->server;
+							// take a note which user requested which vcard
+							$vcard_request[$pl['from']] = $cmd[1];
+							// request the vcard
+							$conn->getVCard($cmd[1]);
+						}
 					}
     			break;
     			case 'presence':
